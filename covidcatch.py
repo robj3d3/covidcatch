@@ -12,18 +12,6 @@ green = (17, 124, 47)
 blue = (0, 0, 255)
 
 #LoadingImages
-sanitizerImg = pygame.image.load("images/sanitizer.png")
-sanitizerImg = pygame.transform.scale(sanitizerImg, (38, 50))
-glovesImg = pygame.image.load("images/gloves.png")
-glovesImg = pygame.transform.scale(glovesImg, (38, 45))
-maskImg = pygame.image.load("images/mask.png")
-maskImg = pygame.transform.scale(maskImg, (50, 35))
-
-openhandsPng = pygame.image.load("images/openhands.png")
-facePng = pygame.image.load("images/face.png")
-facePng = pygame.transform.scale(facePng, (100, 100))
-openhandsPng = pygame.transform.scale(openhandsPng, (100, 100))
-
 bgImg = pygame.image.load("images/bgCovid.png")
 selectText = pygame.image.load("images/choose-your-player.png")
 startImg = pygame.image.load("images/starticon.png")
@@ -32,10 +20,22 @@ titleImg = pygame.image.load("images/titleicon.png")
 clickStartImg = pygame.image.load("images/clickedStartIcon.png")
 clickQuitImg = pygame.image.load("images/clickedQuitIcon.png")
 
-chocolateImg = pygame.image.load("images/chocolateimage.png")
-vacuumImg = pygame.image.load("images/vacuum.png")
+openhandsPng = pygame.image.load("images/openhands.png")
+openhandsPng = pygame.transform.scale(openhandsPng, (100, 100))
+facePng = pygame.image.load("images/face.png")
+facePng = pygame.transform.scale(facePng, (100, 100))
 
+sanitizerImg = pygame.image.load("images/sanitizer.png")
+sanitizerImg = pygame.transform.scale(sanitizerImg, (38, 50))
+glovesImg = pygame.image.load("images/gloves.png")
+glovesImg = pygame.transform.scale(glovesImg, (38, 45))
+maskImg = pygame.image.load("images/mask.png")
+maskImg = pygame.transform.scale(maskImg, (50, 35))
 
+virusImg = pygame.image.load("images/icon.png")
+virusImg = pygame.transform.scale(virusImg, (45, 45))
+virusDistanceImg = pygame.image.load("images/virusDistance.png")
+virusDistanceImg = pygame.transform.scale(virusDistanceImg, (40, 40))
 
 
 #SettingFrame
@@ -53,8 +53,8 @@ playerparms = []
 # dog1parms = [openhandsPng, 5, 377, 450, 36, 30, 1.1]
 # dog2parms = [facePng,3.5,380,510,30,25, 1.02]
 
-handsparms = [openhandsPng, 5, 512, 512, 36, 30, 1.1]
-faceparms = [facePng,5,512,512,30,50, 1.02]
+handsparms = [openhandsPng, 5, 512, 512, 36, 30, 1.01] #increase to 1.1 last number to speed up virus faster
+faceparms = [facePng,5,512,512,30,50, 1.01]
 # p_img,speedIn,player_x,player_y,hitbox_x,hitbox_y,speedmultiplier
 
 #ButtonClass
@@ -121,17 +121,17 @@ class Gameobject:
 # ScoreFunction
 def scorecounter(count):
     font = pygame.font.SysFont(None, 25)
-    text = font.render("Score:" + str(count), True, black)
+    text = font.render("Score:" + str(count), True, white)
     gameDisplay.blit(text, (0, 0))
 
 # CrashFunction/MessageDisplay
 def text_objects(text, font):
-    textsurface = font.render(text, True, blue)
+    textsurface = font.render(text, True, white)
     return textsurface, textsurface.get_rect()
 
 
 def message_display(text):
-    largeText = pygame.font.Font("freesansbold.ttf", 46)
+    largeText = pygame.font.Font("freesansbold.ttf", 30)
     TextSurf, TextRect = text_objects(text, largeText)
     TextRect.center = ((display_width / 2), (display_height / 2))
     gameDisplay.blit(TextSurf, TextRect)
@@ -199,9 +199,8 @@ def game_loop():
     sanitizer = Gameobject(sanitizerImg, 5, random.randrange(0, display_width - 20), -600, 40, 35)
     mask = Gameobject(maskImg, 5, random.randrange(0, display_width - 20), -600, 40, 35)
 
-    chocolate1 = Gameobject(chocolateImg, 3, random.randrange(0, display_width - 20),-600,40,35)
-    chocolate2 = Gameobject(chocolateImg, 3, random.randrange(0, display_width - 20),-1000,40,35)
-    vacuum = Gameobject(vacuumImg, 4, random.randrange(0, display_width - 20),random.randrange(-2000, -1000),55,100)
+    virus = Gameobject(virusImg, 3, random.randrange(0, display_width - 20),-600,40,35)
+    virusDistance = Gameobject(virusDistanceImg, 4, random.randrange(0, display_width - 20),random.randrange(-2000, -1000),40,35)
 #Constants
     x_change = 0
     score = 0
@@ -218,9 +217,8 @@ def game_loop():
         gameDisplay.blit(sanitizer.b_image, (sanitizer.coord_x, sanitizer.coord_y))
         gameDisplay.blit(mask.b_image, (mask.coord_x, mask.coord_y))
 
-        gameDisplay.blit(chocolate1.b_image, (chocolate1.coord_x, chocolate1.coord_y))
-        gameDisplay.blit(chocolate2.b_image, (chocolate2.coord_x, chocolate2.coord_y))
-        gameDisplay.blit(vacuum.b_image, (vacuum.coord_x, vacuum.coord_y))
+        gameDisplay.blit(virus.b_image, (virus.coord_x, virus.coord_y))
+        gameDisplay.blit(virusDistance.b_image, (virusDistance.coord_x, virusDistance.coord_y))
 #Player
         gameDisplay.blit(player.p_img, (player.player_x,player.player_y))
 
@@ -247,9 +245,8 @@ def game_loop():
         sanitizer.coord_y += sanitizer.speed
         mask.coord_y += mask.speed
 
-        chocolate1.coord_y += chocolate1.speed + 1.2 * score
-        chocolate2.coord_y += chocolate1.speed + 1.2 * score
-        vacuum.coord_y += vacuum.speed
+        virus.coord_y += virus.speed + 1.2 * score
+        virusDistance.coord_y += virusDistance.speed
         # if score >= 1:
         # vac_y += 10
 
@@ -268,47 +265,40 @@ def game_loop():
             mask.coord_y = -10
             mask.coord_x = random.randrange(0, display_width - 25)
 
-        if chocolate1.coord_y > display_height - 10:
-            chocolate1.coord_y = -10
-            chocolate1.coord_x = random.randrange(0, display_width - 25)
-        if chocolate2.coord_y > display_height:
-            chocolate2.coord_y = -410
-            chocolate2.coord_x = random.randrange(0, display_width - 25)
-        if vacuum.coord_y > display_height:
-            vacuum.coord_y = -2000
-            vacuum.coord_x = random.randrange(0, display_width - 56)
+        if virus.coord_y > display_height - 10:
+            virus.coord_y = -10
+            virus.coord_x = random.randrange(0, display_width - 25)
+        if virusDistance.coord_y > display_height:
+            virusDistance.coord_y = -2000
+            virusDistance.coord_x = random.randrange(0, display_width - 56)
 # Score
         scorecounter(score)
 
 # Collisons
-    # Choc
-        if player.player_y < chocolate1.coord_y + chocolate1.hitbox_y and player.player_y > chocolate1.coord_y or player.player_y + player.hitbox_y > chocolate1.coord_y and player.player_y + player.hitbox_y < chocolate1.coord_y + chocolate1.hitbox_y:
-            if player.player_x > chocolate1.coord_x and player.player_x < chocolate1.coord_x + chocolate1.hitbox_x or player.player_x + player.hitbox_x > chocolate1.coord_x and player.player_x + player.hitbox_x < chocolate1.coord_x + chocolate1.hitbox_x:
-                crash("Oh no! Doggo got sick")
-                # Choc2
-        if player.player_y < chocolate2.coord_y + chocolate2.hitbox_y and player.player_y > chocolate2.coord_y or player.player_y + player.hitbox_y > chocolate2.coord_y and player.player_y + player.hitbox_y < chocolate2.coord_y + chocolate2.hitbox_y:
-            if player.player_x > chocolate2.coord_x and player.player_x < chocolate2.coord_x + chocolate2.hitbox_x or player.player_x + player.hitbox_x > chocolate2.coord_x and player.player_x + player.hitbox_x < chocolate2.coord_x + chocolate2.hitbox_x:
-                crash("Oh no! Doggo got sick!")
-    # Vacuum
-        if player.player_y < vacuum.coord_y + vacuum.hitbox_y:
-            if player.player_x > vacuum.coord_x and player.player_x < vacuum.coord_x + vacuum.hitbox_x or player.player_x + player.hitbox_x > vacuum.coord_x and player.player_x + player.hitbox_x < vacuum.coord_x + vacuum.hitbox_x:
-                crash("Oh no! Doggo got spooked!")
+    # Virus - BAD
+        if player.player_y < virus.coord_y + virus.hitbox_y and player.player_y > virus.coord_y or player.player_y + player.hitbox_y > virus.coord_y and player.player_y + player.hitbox_y < virus.coord_y + virus.hitbox_y:
+            if player.player_x > virus.coord_x and player.player_x < virus.coord_x + virus.hitbox_x or player.player_x + player.hitbox_x > virus.coord_x and player.player_x + player.hitbox_x < virus.coord_x + virus.hitbox_x:
+                crash("Oh no! You caught COVID-19")
+    # Virus Distance - BAD
+        if player.player_y < virusDistance.coord_y + virusDistance.hitbox_y:
+            if player.player_x > virusDistance.coord_x and player.player_x < virusDistance.coord_x + virusDistance.hitbox_x or player.player_x + player.hitbox_x > virusDistance.coord_x and player.player_x + player.hitbox_x < virusDistance.coord_x + virusDistance.hitbox_x:
+                crash("Oh no! You weren't socially distanced")
 
-    # Gloves
+    # Gloves - GOOD
         if player.player_y < gloves.coord_y + gloves.hitbox_y and player.player_y > gloves.coord_y or player.player_y + player.hitbox_y > gloves.coord_y and player.player_y + player.hitbox_y < gloves.coord_y + gloves.hitbox_y:
             if player.player_x > gloves.coord_x and player.player_x < gloves.coord_x + gloves.hitbox_x or player.player_x + player.hitbox_x > gloves.coord_x and player.player_x + player.hitbox_x < gloves.coord_x + gloves.hitbox_x:
                 gloves.coord_y = -10
                 gloves.coord_x = random.randrange(0, display_width - 25)
                 score += 1
                 print(score)
-    # Sanitizer
+    # Sanitizer - GOOD
         if player.player_y < sanitizer.coord_y + sanitizer.hitbox_y and player.player_y > sanitizer.coord_y or player.player_y + player.hitbox_y > sanitizer.coord_y and player.player_y + player.hitbox_y < sanitizer.coord_y + sanitizer.hitbox_y:
             if player.player_x > sanitizer.coord_x and player.player_x < sanitizer.coord_x + sanitizer.hitbox_x or player.player_x + player.hitbox_x > sanitizer.coord_x and player.player_x + player.hitbox_x < sanitizer.coord_x + sanitizer.hitbox_x:
                 sanitizer.coord_y = -10
                 sanitizer.coord_x = random.randrange(0, display_width - 25)
                 score += 1
                 print(score)
-    # Mask
+    # Mask - GOOD
         if player.player_y < mask.coord_y + mask.hitbox_y and player.player_y > mask.coord_y or player.player_y + player.hitbox_y > mask.coord_y and player.player_y + player.hitbox_y < mask.coord_y + mask.hitbox_y:
             if player.player_x > mask.coord_x and player.player_x < mask.coord_x + mask.hitbox_x or player.player_x + player.hitbox_x > mask.coord_x and player.player_x + player.hitbox_x < mask.coord_x + mask.hitbox_x:
                 mask.coord_y = -10
