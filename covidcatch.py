@@ -7,9 +7,10 @@ pygame.init()
 # R,G,B - SomeColors
 black = (0, 0, 0)
 white = (255, 255, 255)
-red = (255, 0, 0)
+red = (255, 40, 40)
 green = (17, 124, 47)
 blue = (0, 0, 255)
+grey = (180, 180, 180)
 
 #LoadingImages
 bgImg = pygame.image.load("images/bgCovid.png")
@@ -133,7 +134,7 @@ def scorecounter(count):
 
 # CrashFunction/MessageDisplay
 def text_objects(text, font):
-    textsurface = font.render(text, True, white)
+    textsurface = font.render(text, True, red)
     return textsurface, textsurface.get_rect()
 
 
@@ -144,7 +145,7 @@ def message_display(text):
     gameDisplay.blit(TextSurf, TextRect)
     pygame.display.update()
     time.sleep(2)
-    game_loop()
+    game_loop() # NEED TO CHANGE THIS IF WE DON'T WANT IT TO RESTART EACH TIME
 
 
 def crash(message):
@@ -205,21 +206,26 @@ def game_loop():
     wall2 = Gameobject(wall2Img, 3, -20, 50, 0, 0)
     player = Player(playerparms[0],playerparms[1],playerparms[2],playerparms[3],playerparms[4],playerparms[5],playerparms[6])
 
-    gloves = Gameobject(glovesImg, 5, random.randrange(0, display_width - 20),-600,40,35)
-    sanitizer = Gameobject(sanitizerImg, 5, random.randrange(0, display_width - 20), -600, 40, 35)
-    mask = Gameobject(maskImg, 5, random.randrange(0, display_width - 20), -600, 40, 35)
+    gloves = Gameobject(glovesImg, 5, random.randrange(0 + player.range, display_width - 20 - player.range),-600,40,35)
+    sanitizer = Gameobject(sanitizerImg, 5, random.randrange(0 + player.range, display_width - 20 - player.range), -600, 40, 35)
+    mask = Gameobject(maskImg, 5, random.randrange(0 + player.range, display_width - 20 - player.range), -600, 40, 35)
 
-    virus = Gameobject(virusImg, 3, random.randrange(0, display_width - 20),-600,40,35)
-    virusDistance = Gameobject(virusDistanceImg, 4, random.randrange(0, display_width - 20),random.randrange(-2000, -1000),40,35)
+    virus = Gameobject(virusImg, 3, random.randrange(0 + player.range, display_width - 20 - player.range),-600,40,35)
+    virusDistance = Gameobject(virusDistanceImg, 4, random.randrange(0 + player.range, display_width - 20 - player.range),random.randrange(-2000, -1000),40,35)
 #Constants
     x_change = 0
     score = 0
+    covidCounter = 0
+    display_covid_text = False
 
     gameexit = False
 #GameLoop
     while not gameexit:
 
 #Background
+        if covidCounter > 4:
+            crash("Oh no! You caught COVID-19!")
+        
         gameDisplay.fill(white)
         bg = Background(bgImg, 0, 0)
 # Objects
@@ -273,20 +279,20 @@ def game_loop():
 # RecallingObjects
         if gloves.coord_y > display_height:
             gloves.coord_y = -10
-            gloves.coord_x = random.randrange(0, display_width - 25)
+            gloves.coord_x = random.randrange(0 + player.range, display_width - 25 - player.range)
         if sanitizer.coord_y > display_height:
             sanitizer.coord_y = -10
-            sanitizer.coord_x = random.randrange(0, display_width - 25)
+            sanitizer.coord_x = random.randrange(0 + player.range, display_width - 25 - player.range)
         if mask.coord_y > display_height:
             mask.coord_y = -10
-            mask.coord_x = random.randrange(0, display_width - 25)
+            mask.coord_x = random.randrange(0 + player.range, display_width - 25 - player.range)
 
         if virus.coord_y > display_height - 10:
             virus.coord_y = -10
-            virus.coord_x = random.randrange(0, display_width - 25)
+            virus.coord_x = random.randrange(0 + player.range, display_width - 25 - player.range)
         if virusDistance.coord_y > display_height:
             virusDistance.coord_y = -2000
-            virusDistance.coord_x = random.randrange(0, display_width - 56)
+            virusDistance.coord_x = random.randrange(0 + player.range, display_width - 56 - player.range)
 # Score
         scorecounter(score)
 
@@ -294,31 +300,65 @@ def game_loop():
     # Virus - BAD
         if player.player_y <= virus.coord_y + virus.hitbox_y and player.player_y >= virus.coord_y or player.player_y + player.hitbox_y >= virus.coord_y and player.player_y + player.hitbox_y <= virus.coord_y + virus.hitbox_y:
             if player.player_x >= virus.coord_x and player.player_x <= virus.coord_x + virus.hitbox_x or player.player_x + player.hitbox_x >= virus.coord_x and player.player_x + player.hitbox_x <= virus.coord_x + virus.hitbox_x or player.player_x <= virus.coord_x and player.player_x + player.hitbox_x >= virus.coord_x + virus.hitbox_x:
-                    crash("Oh no! You caught COVID-19")
+                    # crash("Oh no! You caught COVID-19")
+                    player.range += 50
+                    virus.coord_y = -10
+                    virus.coord_x = random.randrange(0 + player.range, display_width - 25 - player.range)
+                    wall2.coord_x += 50 # Move walls in
+                    wall1.coord_x -= 50
+                    covidCounter += 1
+
+                    # Display bad catch alert text
+                    if covidCounter <= 4:
+                        TextSurf, TextRect = text_objects("Eeeek you caught a virus!", pygame.font.Font("freesansbold.ttf", 30))
+                        TextRect.center = ((display_width / 2), (display_height / 2))
+                        gameDisplay.blit(TextSurf, TextRect)
+
+                        pygame.display.flip()
+                        time.sleep(1)
+
+                    player.player_x = 350 # Reset hand position to mid
     # Virus Distance - BAD
         if player.player_y <= virusDistance.coord_y + virusDistance.hitbox_y:
             if player.player_x >= virusDistance.coord_x and player.player_x <= virusDistance.coord_x + virusDistance.hitbox_x or player.player_x + player.hitbox_x >= virusDistance.coord_x and player.player_x + player.hitbox_x <= virusDistance.coord_x + virusDistance.hitbox_x or player.player_x <= virusDistance.coord_x and player.player_x + player.hitbox_x >= virusDistance.coord_x + virusDistance.hitbox_x:
-                crash("Oh no! You weren't socially distanced")
+                # crash("Oh no! You weren't socially distanced")
+                player.range += 50
+                virusDistance.coord_y = -10
+                virusDistance.coord_x = random.randrange(0 + player.range, display_width - 25 - player.range)
+                wall2.coord_x += 50 # Move walls in
+                wall1.coord_x -= 50
+                covidCounter += 1
+
+                # Display bad catch alert text
+                if covidCounter <= 4:
+                    TextSurf, TextRect = text_objects("Eeeek you caught a virus!", pygame.font.Font("freesansbold.ttf", 30))
+                    TextRect.center = ((display_width / 2), (display_height / 2))
+                    gameDisplay.blit(TextSurf, TextRect)
+
+                    pygame.display.flip()
+                    time.sleep(1)
+
+                player.player_x = 350 # Reset hand position to mid
 
     # Gloves - GOOD
         if player.player_y <= gloves.coord_y + gloves.hitbox_y and player.player_y >= gloves.coord_y or player.player_y + player.hitbox_y >= gloves.coord_y and player.player_y + player.hitbox_y <= gloves.coord_y + gloves.hitbox_y:
             if player.player_x >= gloves.coord_x and player.player_x <= gloves.coord_x + gloves.hitbox_x or player.player_x + player.hitbox_x >= gloves.coord_x and player.player_x + player.hitbox_x <= gloves.coord_x + gloves.hitbox_x or player.player_x <= gloves.coord_x and player.player_x + player.hitbox_x >= gloves.coord_x + gloves.hitbox_x:
                     gloves.coord_y = -10
-                    gloves.coord_x = random.randrange(0, display_width - 25)
+                    gloves.coord_x = random.randrange(0 + player.range, display_width - 25 - player.range)
                     score += 1
                     print(score)
     # Sanitizer - GOOD
         if player.player_y <= sanitizer.coord_y + sanitizer.hitbox_y and player.player_y >= sanitizer.coord_y or player.player_y + player.hitbox_y >= sanitizer.coord_y and player.player_y + player.hitbox_y <= sanitizer.coord_y + sanitizer.hitbox_y:
             if player.player_x >= sanitizer.coord_x and player.player_x < sanitizer.coord_x + sanitizer.hitbox_x or player.player_x + player.hitbox_x >= sanitizer.coord_x and player.player_x + player.hitbox_x <= sanitizer.coord_x + sanitizer.hitbox_x or player.player_x <= sanitizer.coord_x and player.player_x + player.hitbox_x >= sanitizer.coord_x + sanitizer.hitbox_x:
                     sanitizer.coord_y = -10
-                    sanitizer.coord_x = random.randrange(0, display_width - 25)
+                    sanitizer.coord_x = random.randrange(0 + player.range, display_width - 25 - player.range)
                     score += 1
                     print(score)
     # Mask - GOOD
         if player.player_y <= mask.coord_y + mask.hitbox_y and player.player_y >= mask.coord_y or player.player_y + player.hitbox_y >= mask.coord_y and player.player_y + player.hitbox_y <= mask.coord_y + mask.hitbox_y:
             if player.player_x >= mask.coord_x and player.player_x <= mask.coord_x + mask.hitbox_x or player.player_x + player.hitbox_x >= mask.coord_x and player.player_x + player.hitbox_x <= mask.coord_x + mask.hitbox_x or player.player_x <= mask.coord_x and player.player_x + player.hitbox_x >= mask.coord_x + mask.hitbox_x:
                     mask.coord_y = -10
-                    mask.coord_x = random.randrange(0, display_width - 25)
+                    mask.coord_x = random.randrange(0 + player.range, display_width - 25 - player.range)
                     score += 1
                     print(score)
 
