@@ -1,7 +1,6 @@
 # COVIDcatch
 
 A catching isolation-inspired videogame made in Python using the Pygame libraries as part of the [OxfordHack](https://oxfordhack.co.uk/) Digithon 2020.
----
 
 ## Gameplay Rules
 
@@ -15,7 +14,6 @@ However, catch a *virus* or *<2m sign* and the two people on each side of the sc
 Let them get too close and it'll be **GAME OVER!**
 
 Play against your friends, or even yourself, with an integrated score board that tracks the highest scores in a given session.
----
 
 ## Startup Instructions
 
