@@ -20,6 +20,8 @@ titleImg = pygame.image.load("images/titleicon.png")
 clickStartImg = pygame.image.load("images/clickedStartIcon.png")
 clickQuitImg = pygame.image.load("images/clickedQuitIcon.png")
 
+
+
 openhandsPng = pygame.image.load("images/openhands.png")
 openhandsPng = pygame.transform.scale(openhandsPng, (100, 100))
 facePng = pygame.image.load("images/face.png")
@@ -31,6 +33,8 @@ glovesImg = pygame.image.load("images/gloves.png")
 glovesImg = pygame.transform.scale(glovesImg, (38, 45))
 maskImg = pygame.image.load("images/mask.png")
 maskImg = pygame.transform.scale(maskImg, (50, 35))
+guy1Img = pygame.image.load("images/guy1.png")
+guy1Img = pygame.transform.scale(guy1Img, (100, 100))
 
 virusImg = pygame.image.load("images/icon.png")
 virusImg = pygame.transform.scale(virusImg, (45, 45))
@@ -103,8 +107,8 @@ class Player:
         self.player_x = player_x
         self.player_y = player_y
         self.p_img = p_img
-        self.hitbox_x = hitbox_x
-        self.hitbox_y = hitbox_y
+        self.hitbox_x = 100
+        self.hitbox_y = 100
         self.speedmult = speedmultiplier
 
 
@@ -193,6 +197,8 @@ def selectScreen():
 def game_loop():
 #CreatingObjects
 # b_image, speed, coord_x, coord_y, hitbox_x, hitbox_y
+
+    guy1 = Gameobject(guy1Img, 5, 0, display_height - 100, 100, 100)
     player = Player(playerparms[0],playerparms[1],playerparms[2],playerparms[3],playerparms[4],playerparms[5],playerparms[6])
 
     gloves = Gameobject(glovesImg, 5, random.randrange(0, display_width - 20),-600,40,35)
@@ -219,6 +225,7 @@ def game_loop():
 
         gameDisplay.blit(virus.b_image, (virus.coord_x, virus.coord_y))
         gameDisplay.blit(virusDistance.b_image, (virusDistance.coord_x, virusDistance.coord_y))
+        gameDisplay.blit(guy1.b_image, (guy1.coord_x, guy1.coord_y))
 #Player
         gameDisplay.blit(player.p_img, (player.player_x,player.player_y))
 
@@ -251,7 +258,9 @@ def game_loop():
         # vac_y += 10
 
 # Boundaries
-        if player.player_x > display_width - player.hitbox_x or player.player_x < 0:
+        if player.player_x > display_width - 100 :
+            x_change = 0
+        if player.player_x < 0:
             x_change = 0
 
 # RecallingObjects
@@ -276,35 +285,35 @@ def game_loop():
 
 # Collisons
     # Virus - BAD
-        if player.player_y < virus.coord_y + virus.hitbox_y and player.player_y > virus.coord_y or player.player_y + player.hitbox_y > virus.coord_y and player.player_y + player.hitbox_y < virus.coord_y + virus.hitbox_y:
-            if player.player_x > virus.coord_x and player.player_x < virus.coord_x + virus.hitbox_x or player.player_x + player.hitbox_x > virus.coord_x and player.player_x + player.hitbox_x < virus.coord_x + virus.hitbox_x:
-                crash("Oh no! You caught COVID-19")
+        if player.player_y <= virus.coord_y + virus.hitbox_y and player.player_y >= virus.coord_y or player.player_y + player.hitbox_y >= virus.coord_y and player.player_y + player.hitbox_y <= virus.coord_y + virus.hitbox_y:
+            if player.player_x >= virus.coord_x and player.player_x <= virus.coord_x + virus.hitbox_x or player.player_x + player.hitbox_x >= virus.coord_x and player.player_x + player.hitbox_x <= virus.coord_x + virus.hitbox_x or player.player_x <= virus.coord_x and player.player_x + player.hitbox_x >= virus.coord_x + virus.hitbox_x:
+                    crash("Oh no! You caught COVID-19")
     # Virus Distance - BAD
-        if player.player_y < virusDistance.coord_y + virusDistance.hitbox_y:
-            if player.player_x > virusDistance.coord_x and player.player_x < virusDistance.coord_x + virusDistance.hitbox_x or player.player_x + player.hitbox_x > virusDistance.coord_x and player.player_x + player.hitbox_x < virusDistance.coord_x + virusDistance.hitbox_x:
+        if player.player_y <= virusDistance.coord_y + virusDistance.hitbox_y:
+            if player.player_x >= virusDistance.coord_x and player.player_x <= virusDistance.coord_x + virusDistance.hitbox_x or player.player_x + player.hitbox_x >= virusDistance.coord_x and player.player_x + player.hitbox_x <= virusDistance.coord_x + virusDistance.hitbox_x or player.player_x <= virusDistance.coord_x and player.player_x + player.hitbox_x >= virusDistance.coord_x + virusDistance.hitbox_x:
                 crash("Oh no! You weren't socially distanced")
 
     # Gloves - GOOD
-        if player.player_y < gloves.coord_y + gloves.hitbox_y and player.player_y > gloves.coord_y or player.player_y + player.hitbox_y > gloves.coord_y and player.player_y + player.hitbox_y < gloves.coord_y + gloves.hitbox_y:
-            if player.player_x > gloves.coord_x and player.player_x < gloves.coord_x + gloves.hitbox_x or player.player_x + player.hitbox_x > gloves.coord_x and player.player_x + player.hitbox_x < gloves.coord_x + gloves.hitbox_x:
-                gloves.coord_y = -10
-                gloves.coord_x = random.randrange(0, display_width - 25)
-                score += 1
-                print(score)
+        if player.player_y <= gloves.coord_y + gloves.hitbox_y and player.player_y >= gloves.coord_y or player.player_y + player.hitbox_y >= gloves.coord_y and player.player_y + player.hitbox_y <= gloves.coord_y + gloves.hitbox_y:
+            if player.player_x >= gloves.coord_x and player.player_x <= gloves.coord_x + gloves.hitbox_x or player.player_x + player.hitbox_x >= gloves.coord_x and player.player_x + player.hitbox_x <= gloves.coord_x + gloves.hitbox_x or player.player_x <= gloves.coord_x and player.player_x + player.hitbox_x >= gloves.coord_x + gloves.hitbox_x:
+                    gloves.coord_y = -10
+                    gloves.coord_x = random.randrange(0, display_width - 25)
+                    score += 1
+                    print(score)
     # Sanitizer - GOOD
-        if player.player_y < sanitizer.coord_y + sanitizer.hitbox_y and player.player_y > sanitizer.coord_y or player.player_y + player.hitbox_y > sanitizer.coord_y and player.player_y + player.hitbox_y < sanitizer.coord_y + sanitizer.hitbox_y:
-            if player.player_x > sanitizer.coord_x and player.player_x < sanitizer.coord_x + sanitizer.hitbox_x or player.player_x + player.hitbox_x > sanitizer.coord_x and player.player_x + player.hitbox_x < sanitizer.coord_x + sanitizer.hitbox_x:
-                sanitizer.coord_y = -10
-                sanitizer.coord_x = random.randrange(0, display_width - 25)
-                score += 1
-                print(score)
+        if player.player_y <= sanitizer.coord_y + sanitizer.hitbox_y and player.player_y >= sanitizer.coord_y or player.player_y + player.hitbox_y >= sanitizer.coord_y and player.player_y + player.hitbox_y <= sanitizer.coord_y + sanitizer.hitbox_y:
+            if player.player_x >= sanitizer.coord_x and player.player_x < sanitizer.coord_x + sanitizer.hitbox_x or player.player_x + player.hitbox_x >= sanitizer.coord_x and player.player_x + player.hitbox_x <= sanitizer.coord_x + sanitizer.hitbox_x or player.player_x <= sanitizer.coord_x and player.player_x + player.hitbox_x >= sanitizer.coord_x + sanitizer.hitbox_x:
+                    sanitizer.coord_y = -10
+                    sanitizer.coord_x = random.randrange(0, display_width - 25)
+                    score += 1
+                    print(score)
     # Mask - GOOD
-        if player.player_y < mask.coord_y + mask.hitbox_y and player.player_y > mask.coord_y or player.player_y + player.hitbox_y > mask.coord_y and player.player_y + player.hitbox_y < mask.coord_y + mask.hitbox_y:
-            if player.player_x > mask.coord_x and player.player_x < mask.coord_x + mask.hitbox_x or player.player_x + player.hitbox_x > mask.coord_x and player.player_x + player.hitbox_x < mask.coord_x + mask.hitbox_x:
-                mask.coord_y = -10
-                mask.coord_x = random.randrange(0, display_width - 25)
-                score += 1
-                print(score)
+        if player.player_y <= mask.coord_y + mask.hitbox_y and player.player_y >= mask.coord_y or player.player_y + player.hitbox_y >= mask.coord_y and player.player_y + player.hitbox_y <= mask.coord_y + mask.hitbox_y:
+            if player.player_x >= mask.coord_x and player.player_x <= mask.coord_x + mask.hitbox_x or player.player_x + player.hitbox_x >= mask.coord_x and player.player_x + player.hitbox_x <= mask.coord_x + mask.hitbox_x or player.player_x <= mask.coord_x and player.player_x + player.hitbox_x >= mask.coord_x + mask.hitbox_x:
+                    mask.coord_y = -10
+                    mask.coord_x = random.randrange(0, display_width - 25)
+                    score += 1
+                    print(score)
 
         pygame.display.update()
         clock.tick(60)
