@@ -12,35 +12,39 @@ green = (17, 124, 47)
 blue = (0, 0, 255)
 
 #LoadingImages
-sanitizerPng = pygame.image.load("images/sanitizer.png")
-openhandsPng = pygame.image.load("images/openhands.png")
-glovesPng = pygame.image.load("images/gloves.png")
+sanitizerImg = pygame.image.load("images/sanitizer.png")
+sanitizerImg = pygame.transform.scale(sanitizerImg, (38, 50))
+glovesImg = pygame.image.load("images/gloves.png")
+glovesImg = pygame.transform.scale(glovesImg, (38, 45))
+maskImg = pygame.image.load("images/mask.png")
+maskImg = pygame.transform.scale(maskImg, (50, 35))
 sickpeoplePng = pygame.image.load("images/sickpeople.png")
-maskPng = pygame.image.load("images/mask.png")
+
+openhandsPng = pygame.image.load("images/openhands.png")
 facePng = pygame.image.load("images/face.png")
 facePng = pygame.transform.scale(facePng, (100, 100))
 openhandsPng = pygame.transform.scale(openhandsPng, (100, 100))
 
-sunImg = pygame.image.load("images/bgSunset1.png")
-dogImg = pygame.image.load("images/pixdogimage.png")
-clickedDogImg = pygame.image.load("images/clickeddog.png")
-dog2Img = pygame.image.load("images/dog2image.png")
-clickedDog2Img = pygame.image.load("images/clickeddog2.png")
-boneImg = pygame.image.load("images/boneimage.png")
-chocolateImg = pygame.image.load("images/chocolateimage.png")
-vacuumImg = pygame.image.load("images/vacuum.png")
+bgImg = pygame.image.load("images/bgCovid.png")
+selectText = pygame.image.load("images/choose-your-player.png")
 startImg = pygame.image.load("images/starticon.png")
 quitImg = pygame.image.load("images/quiticon.png")
 titleImg = pygame.image.load("images/titleicon.png")
 clickStartImg = pygame.image.load("images/clickedStartIcon.png")
 clickQuitImg = pygame.image.load("images/clickedQuitIcon.png")
-selectText = pygame.image.load("images/selectscreentext.png")
+
+chocolateImg = pygame.image.load("images/chocolateimage.png")
+vacuumImg = pygame.image.load("images/vacuum.png")
+
+
+
 
 #SettingFrame
 display_width = 800
 display_height = 600
 gameDisplay = pygame.display.set_mode((display_width, display_height))
-pygame.display.set_caption("Dodgin' Doggo")
+icon = pygame.display.set_icon(pygame.image.load('images/icon.png'))
+pygame.display.set_caption("COVIDcatch")
 
 #SettingClock
 clock = pygame.time.Clock()
@@ -50,8 +54,9 @@ playerparms = []
 # dog1parms = [openhandsPng, 5, 377, 450, 36, 30, 1.1]
 # dog2parms = [facePng,3.5,380,510,30,25, 1.02]
 
-dog1parms = [openhandsPng, 5, 377, 450, 36, 30, 1.1]
-dog2parms = [facePng,3.5,380,510,30,25, 1.02]
+handsparms = [openhandsPng, 5, 512, 512, 36, 30, 1.1]
+faceparms = [facePng,5,512,512,30,50, 1.02]
+# p_img,speedIn,player_x,player_y,hitbox_x,hitbox_y,speedmultiplier
 
 #ButtonClass
 class Button:
@@ -94,10 +99,10 @@ class Background:
 
 # PlayerClass
 class Player:
-    def __init__(self,p_img,speedIn,dog_x,dog_y,hitbox_x,hitbox_y,speedmultiplier):
+    def __init__(self,p_img,speedIn,player_x,player_y,hitbox_x,hitbox_y,speedmultiplier):
         self.speed = speedIn
-        self.dog_x = dog_x
-        self.dog_y = dog_y
+        self.player_x = player_x
+        self.player_y = player_y
         self.p_img = p_img
         self.hitbox_x = hitbox_x
         self.hitbox_y = hitbox_y
@@ -179,8 +184,8 @@ def selectScreen():
 
         # dogSelect = Button2(dogImg, 280,260,40,150,clickedDogImg,278,226,dog1parms,game_loop)
         # dog2select = Button2(dog2Img,480,260,40,100, clickedDog2Img,479,239,dog2parms,game_loop)
-        openhandsSelect = Button2(openhandsPng, 280, 260, 40, 150, openhandsPng, 278, 226, dog1parms, game_loop)
-        faceSelect = Button2(facePng, 480, 260, 40, 100, facePng, 479, 239, dog2parms, game_loop)
+        openhandsSelect = Button2(openhandsPng, 280, 260, 200, 200, openhandsPng, 278, 226, handsparms, game_loop)
+        faceSelect = Button2(facePng, 480, 260, 200, 200, facePng, 479, 239, faceparms, game_loop)
 
         pygame.display.update()
         clock.tick(15)
@@ -188,8 +193,13 @@ def selectScreen():
 #MainGame
 def game_loop():
 #CreatingObjects
-    dog = Player(playerparms[0],playerparms[1],playerparms[2],playerparms[3],playerparms[4],playerparms[5],playerparms[6])
-    bone = Gameobject(boneImg, 5, random.randrange(0, display_width - 20),-600,40,35)
+# b_image, speed, coord_x, coord_y, hitbox_x, hitbox_y
+    player = Player(playerparms[0],playerparms[1],playerparms[2],playerparms[3],playerparms[4],playerparms[5],playerparms[6])
+
+    gloves = Gameobject(glovesImg, 5, random.randrange(0, display_width - 20),-600,40,35)
+    sanitizer = Gameobject(sanitizerImg, 5, random.randrange(0, display_width - 20), -600, 40, 35)
+    mask = Gameobject(maskImg, 5, random.randrange(0, display_width - 20), -600, 40, 35)
+
     chocolate1 = Gameobject(chocolateImg, 3, random.randrange(0, display_width - 20),-600,40,35)
     chocolate2 = Gameobject(chocolateImg, 3, random.randrange(0, display_width - 20),-1000,40,35)
     vacuum = Gameobject(vacuumImg, 4, random.randrange(0, display_width - 20),random.randrange(-2000, -1000),55,100)
@@ -203,14 +213,17 @@ def game_loop():
 
 #Background
         gameDisplay.fill(white)
-        bg = Background(sunImg, 0, 0)
+        bg = Background(bgImg, 0, 0)
 # Objects
-        gameDisplay.blit(bone.b_image, (bone.coord_x, bone.coord_y))
+        gameDisplay.blit(gloves.b_image, (gloves.coord_x, gloves.coord_y))
+        gameDisplay.blit(sanitizer.b_image, (sanitizer.coord_x, sanitizer.coord_y))
+        gameDisplay.blit(mask.b_image, (mask.coord_x, mask.coord_y))
+
         gameDisplay.blit(chocolate1.b_image, (chocolate1.coord_x, chocolate1.coord_y))
         gameDisplay.blit(chocolate2.b_image, (chocolate2.coord_x, chocolate2.coord_y))
         gameDisplay.blit(vacuum.b_image, (vacuum.coord_x, vacuum.coord_y))
 #Player
-        gameDisplay.blit(dog.p_img, (dog.dog_x,dog.dog_y))
+        gameDisplay.blit(player.p_img, (player.player_x,player.player_y))
 
 #Events
         for event in pygame.event.get():
@@ -218,20 +231,23 @@ def game_loop():
                 pygame.QUIT()
                 quit()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT and dog.dog_x > 0:
-                    x_change = dog.speed*-1 + -1*dog.speedmult*score
-                elif event.key == pygame.K_RIGHT and dog.dog_x < display_width - 45:
-                    x_change = dog.speed + dog.speedmult*score
+                if event.key == pygame.K_LEFT and player.player_x > 0:
+                    x_change = player.speed*-1 + -1*player.speedmult*score
+                elif event.key == pygame.K_RIGHT and player.player_x < display_width - 45:
+                    x_change = player.speed + player.speedmult*score
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                     x_change = 0
 
-        dog.dog_x += x_change
+        player.player_x += x_change
 
         # print(event)
 
 # ObjectSpeeds
-        bone.coord_y += bone.speed
+        gloves.coord_y += gloves.speed
+        sanitizer.coord_y += sanitizer.speed
+        mask.coord_y += mask.speed
+
         chocolate1.coord_y += chocolate1.speed + 1.2 * score
         chocolate2.coord_y += chocolate1.speed + 1.2 * score
         vacuum.coord_y += vacuum.speed
@@ -239,13 +255,20 @@ def game_loop():
         # vac_y += 10
 
 # Boundaries
-        if dog.dog_x > display_width - dog.hitbox_x or dog.dog_x < 0:
+        if player.player_x > display_width - player.hitbox_x or player.player_x < 0:
             x_change = 0
 
 # RecallingObjects
-        if bone.coord_y > display_height:
-            bone.coord_y = -10
-            bone.coord_x = random.randrange(0, display_width - 25)
+        if gloves.coord_y > display_height:
+            gloves.coord_y = -10
+            gloves.coord_x = random.randrange(0, display_width - 25)
+        if sanitizer.coord_y > display_height:
+            sanitizer.coord_y = -10
+            sanitizer.coord_x = random.randrange(0, display_width - 25)
+        if mask.coord_y > display_height:
+            mask.coord_y = -10
+            mask.coord_x = random.randrange(0, display_width - 25)
+
         if chocolate1.coord_y > display_height - 10:
             chocolate1.coord_y = -10
             chocolate1.coord_x = random.randrange(0, display_width - 25)
@@ -260,22 +283,37 @@ def game_loop():
 
 # Collisons
     # Choc
-        if dog.dog_y < chocolate1.coord_y + chocolate1.hitbox_y and dog.dog_y > chocolate1.coord_y or dog.dog_y + dog.hitbox_y > chocolate1.coord_y and dog.dog_y + dog.hitbox_y < chocolate1.coord_y + chocolate1.hitbox_y:
-            if dog.dog_x > chocolate1.coord_x and dog.dog_x < chocolate1.coord_x + chocolate1.hitbox_x or dog.dog_x + dog.hitbox_x > chocolate1.coord_x and dog.dog_x + dog.hitbox_x < chocolate1.coord_x + chocolate1.hitbox_x:
+        if player.player_y < chocolate1.coord_y + chocolate1.hitbox_y and player.player_y > chocolate1.coord_y or player.player_y + player.hitbox_y > chocolate1.coord_y and player.player_y + player.hitbox_y < chocolate1.coord_y + chocolate1.hitbox_y:
+            if player.player_x > chocolate1.coord_x and player.player_x < chocolate1.coord_x + chocolate1.hitbox_x or player.player_x + player.hitbox_x > chocolate1.coord_x and player.player_x + player.hitbox_x < chocolate1.coord_x + chocolate1.hitbox_x:
                 crash("Oh no! Doggo got sick")
                 # Choc2
-        if dog.dog_y < chocolate2.coord_y + chocolate2.hitbox_y and dog.dog_y > chocolate2.coord_y or dog.dog_y + dog.hitbox_y > chocolate2.coord_y and dog.dog_y + dog.hitbox_y < chocolate2.coord_y + chocolate2.hitbox_y:
-            if dog.dog_x > chocolate2.coord_x and dog.dog_x < chocolate2.coord_x + chocolate2.hitbox_x or dog.dog_x + dog.hitbox_x > chocolate2.coord_x and dog.dog_x + dog.hitbox_x < chocolate2.coord_x + chocolate2.hitbox_x:
+        if player.player_y < chocolate2.coord_y + chocolate2.hitbox_y and player.player_y > chocolate2.coord_y or player.player_y + player.hitbox_y > chocolate2.coord_y and player.player_y + player.hitbox_y < chocolate2.coord_y + chocolate2.hitbox_y:
+            if player.player_x > chocolate2.coord_x and player.player_x < chocolate2.coord_x + chocolate2.hitbox_x or player.player_x + player.hitbox_x > chocolate2.coord_x and player.player_x + player.hitbox_x < chocolate2.coord_x + chocolate2.hitbox_x:
                 crash("Oh no! Doggo got sick!")
     # Vacuum
-        if dog.dog_y < vacuum.coord_y + vacuum.hitbox_y:
-            if dog.dog_x > vacuum.coord_x and dog.dog_x < vacuum.coord_x + vacuum.hitbox_x or dog.dog_x + dog.hitbox_x > vacuum.coord_x and dog.dog_x + dog.hitbox_x < vacuum.coord_x + vacuum.hitbox_x:
+        if player.player_y < vacuum.coord_y + vacuum.hitbox_y:
+            if player.player_x > vacuum.coord_x and player.player_x < vacuum.coord_x + vacuum.hitbox_x or player.player_x + player.hitbox_x > vacuum.coord_x and player.player_x + player.hitbox_x < vacuum.coord_x + vacuum.hitbox_x:
                 crash("Oh no! Doggo got spooked!")
-    # Bone
-        if dog.dog_y < bone.coord_y + bone.hitbox_y and dog.dog_y > bone.coord_y or dog.dog_y + dog.hitbox_y > bone.coord_y and dog.dog_y + dog.hitbox_y < bone.coord_y + bone.hitbox_y:
-            if dog.dog_x > bone.coord_x and dog.dog_x < bone.coord_x + bone.hitbox_x or dog.dog_x + dog.hitbox_x > bone.coord_x and dog.dog_x + dog.hitbox_x < bone.coord_x + bone.hitbox_x:
-                bone.coord_y = -10
-                bone.coord_x = random.randrange(0, display_width - 25)
+
+    # Gloves
+        if player.player_y < gloves.coord_y + gloves.hitbox_y and player.player_y > gloves.coord_y or player.player_y + player.hitbox_y > gloves.coord_y and player.player_y + player.hitbox_y < gloves.coord_y + gloves.hitbox_y:
+            if player.player_x > gloves.coord_x and player.player_x < gloves.coord_x + gloves.hitbox_x or player.player_x + player.hitbox_x > gloves.coord_x and player.player_x + player.hitbox_x < gloves.coord_x + gloves.hitbox_x:
+                gloves.coord_y = -10
+                gloves.coord_x = random.randrange(0, display_width - 25)
+                score += 1
+                print(score)
+    # Sanitizer
+        if player.player_y < sanitizer.coord_y + sanitizer.hitbox_y and player.player_y > sanitizer.coord_y or player.player_y + player.hitbox_y > sanitizer.coord_y and player.player_y + player.hitbox_y < sanitizer.coord_y + sanitizer.hitbox_y:
+            if player.player_x > sanitizer.coord_x and player.player_x < sanitizer.coord_x + sanitizer.hitbox_x or player.player_x + player.hitbox_x > sanitizer.coord_x and player.player_x + player.hitbox_x < sanitizer.coord_x + sanitizer.hitbox_x:
+                sanitizer.coord_y = -10
+                sanitizer.coord_x = random.randrange(0, display_width - 25)
+                score += 1
+                print(score)
+    # Mask
+        if player.player_y < mask.coord_y + mask.hitbox_y and player.player_y > mask.coord_y or player.player_y + player.hitbox_y > mask.coord_y and player.player_y + player.hitbox_y < mask.coord_y + mask.hitbox_y:
+            if player.player_x > mask.coord_x and player.player_x < mask.coord_x + mask.hitbox_x or player.player_x + player.hitbox_x > mask.coord_x and player.player_x + player.hitbox_x < mask.coord_x + mask.hitbox_x:
+                mask.coord_y = -10
+                mask.coord_x = random.randrange(0, display_width - 25)
                 score += 1
                 print(score)
 
