@@ -52,6 +52,9 @@ pygame.display.set_caption("COVIDcatch")
 #SettingClock
 clock = pygame.time.Clock()
 
+#ScoresArray
+scores = []
+
 #PlayerClassParameters
 playerparms = []
 # dog1parms = [openhandsPng, 5, 377, 450, 36, 30, 1.1]
@@ -145,10 +148,13 @@ def message_display(text):
     gameDisplay.blit(TextSurf, TextRect)
     pygame.display.update()
     time.sleep(2)
-    game_loop() # NEED TO CHANGE THIS IF WE DON'T WANT IT TO RESTART EACH TIME
+    # game_loop() # NEED TO CHANGE THIS IF WE DON'T WANT IT TO RESTART EACH TIME
+    runGame()
 
 
-def crash(message):
+def crash(message, score): # Called at end of game
+    scores.append(score)
+    scores.sort(reverse = True)
     message_display(message)
 
 #QuitFunction
@@ -172,6 +178,18 @@ def mainmenu():
         titletext = gameDisplay.blit(titleImg, (275,200))
         startButton = Button(startImg,280,260,60,20,clickStartImg,273,258,selectScreen)
         quitButton = Button(quitImg,475,260,60,20,clickQuitImg,470,258,quitgame)
+
+        # Prints out all "high" scores to main menu
+        TextSurf = pygame.font.Font("freesansbold.ttf", 30).render("High scores:", True, black)
+        TextRect = TextSurf.get_rect()
+        TextRect.center = ((display_width / 2), (display_height / 3)*2-60)
+        gameDisplay.blit(TextSurf, TextRect)
+
+        for i in range(len(scores)):
+            TextSurf = pygame.font.Font("freesansbold.ttf", 30).render(str(scores[i]), True, black)
+            TextRect = TextSurf.get_rect()
+            TextRect.center = ((display_width / 2), (display_height / 3)*2+(30*i+1))
+            gameDisplay.blit(TextSurf, TextRect)
 
         pygame.display.update()
         clock.tick(15)
@@ -224,7 +242,7 @@ def game_loop():
 
 #Background
         if covidCounter > 4:
-            crash("Oh no! You caught COVID-19!")
+            crash("Oh no! You caught COVID-19!", score)
         
         gameDisplay.fill(white)
         bg = Background(bgImg, 0, 0)
@@ -365,8 +383,11 @@ def game_loop():
         pygame.display.update()
         clock.tick(60)
 
-mainmenu()
-selectScreen()
-game_loop()
-pygame.QUIT()
-quit()
+def runGame():
+    mainmenu()
+    selectScreen()
+    game_loop()
+    pygame.QUIT()
+    quit()
+
+runGame()
