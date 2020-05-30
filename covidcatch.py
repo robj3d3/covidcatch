@@ -18,7 +18,6 @@ glovesImg = pygame.image.load("images/gloves.png")
 glovesImg = pygame.transform.scale(glovesImg, (38, 45))
 maskImg = pygame.image.load("images/mask.png")
 maskImg = pygame.transform.scale(maskImg, (50, 35))
-sickpeoplePng = pygame.image.load("images/sickpeople.png")
 
 openhandsPng = pygame.image.load("images/openhands.png")
 facePng = pygame.image.load("images/face.png")
