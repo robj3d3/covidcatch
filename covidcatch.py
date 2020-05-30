@@ -20,8 +20,6 @@ titleImg = pygame.image.load("images/titleicon.png")
 clickStartImg = pygame.image.load("images/clickedStartIcon.png")
 clickQuitImg = pygame.image.load("images/clickedQuitIcon.png")
 
-
-
 openhandsPng = pygame.image.load("images/openhands.png")
 openhandsPng = pygame.transform.scale(openhandsPng, (100, 100))
 facePng = pygame.image.load("images/face.png")
@@ -33,8 +31,9 @@ glovesImg = pygame.image.load("images/gloves.png")
 glovesImg = pygame.transform.scale(glovesImg, (38, 45))
 maskImg = pygame.image.load("images/mask.png")
 maskImg = pygame.transform.scale(maskImg, (50, 35))
-guy1Img = pygame.image.load("images/guy1.png")
-guy1Img = pygame.transform.scale(guy1Img, (100, 100))
+distanceBoardImg = pygame.image.load("images/distanceBoard.png")
+wall1Img = pygame.image.load("images/wall1.png")
+wall2Img = pygame.image.load("images/wall2.png")
 
 virusImg = pygame.image.load("images/icon.png")
 virusImg = pygame.transform.scale(virusImg, (45, 45))
@@ -99,6 +98,9 @@ class Background:
         self.bg_x = bg_x
         self.bg_y = bg_y
         gameDisplay.blit(bg_img, (bg_x, bg_y))
+        
+        distanceBoard = Gameobject(distanceBoardImg, 0, 0, 525, 0, 0)
+        gameDisplay.blit(distanceBoard.b_image, (distanceBoard.coord_x, distanceBoard.coord_y))
 
 # PlayerClass
 class Player:
@@ -110,6 +112,7 @@ class Player:
         self.hitbox_x = 100
         self.hitbox_y = 100
         self.speedmult = speedmultiplier
+        self.range = 90
 
 
 # GameObjectsClass
@@ -198,7 +201,8 @@ def game_loop():
 #CreatingObjects
 # b_image, speed, coord_x, coord_y, hitbox_x, hitbox_y
 
-    guy1 = Gameobject(guy1Img, 5, 0, display_height - 100, 100, 100)
+    wall1 = Gameobject(wall1Img, 3, 710, 50, 0, 0)
+    wall2 = Gameobject(wall2Img, 3, -20, 50, 0, 0)
     player = Player(playerparms[0],playerparms[1],playerparms[2],playerparms[3],playerparms[4],playerparms[5],playerparms[6])
 
     gloves = Gameobject(glovesImg, 5, random.randrange(0, display_width - 20),-600,40,35)
@@ -225,7 +229,9 @@ def game_loop():
 
         gameDisplay.blit(virus.b_image, (virus.coord_x, virus.coord_y))
         gameDisplay.blit(virusDistance.b_image, (virusDistance.coord_x, virusDistance.coord_y))
-        gameDisplay.blit(guy1.b_image, (guy1.coord_x, guy1.coord_y))
+        gameDisplay.blit(wall1.b_image, (wall1.coord_x, wall1.coord_y))
+        gameDisplay.blit(wall2.b_image, (wall2.coord_x, wall2.coord_y))
+
 #Player
         gameDisplay.blit(player.p_img, (player.player_x,player.player_y))
 
@@ -254,13 +260,14 @@ def game_loop():
 
         virus.coord_y += virus.speed + 1.2 * score
         virusDistance.coord_y += virusDistance.speed
+        
         # if score >= 1:
         # vac_y += 10
 
 # Boundaries
-        if player.player_x > display_width - 100 :
+        if player.player_x > (display_width - 100 - player.range):
             x_change = 0
-        if player.player_x < 0:
+        if player.player_x < (0 + player.range):
             x_change = 0
 
 # RecallingObjects
