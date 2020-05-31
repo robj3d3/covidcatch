@@ -33,18 +33,22 @@ glovesImg = pygame.transform.scale(glovesImg, (38, 45))
 maskImg = pygame.image.load("images/mask.png")
 maskImg = pygame.transform.scale(maskImg, (50, 35))
 distanceBoardImg = pygame.image.load("images/distanceBoard.png")
+distanceBoardImg = pygame.transform.scale(distanceBoardImg, (1000, 100))
 wall1Img = pygame.image.load("images/wall1.png")
 wall2Img = pygame.image.load("images/wall2.png")
+bgImg = pygame.transform.scale(bgImg, (1000, 800))
+
 
 virusImg = pygame.image.load("images/icon.png")
 virusImg = pygame.transform.scale(virusImg, (45, 45))
 virusDistanceImg = pygame.image.load("images/virusDistance.png")
 virusDistanceImg = pygame.transform.scale(virusDistanceImg, (40, 40))
 
+pygame.mixer.music.load('coughing.mp3')
 
 #SettingFrame
-display_width = 800
-display_height = 600
+display_width = 1000
+display_height = 800
 gameDisplay = pygame.display.set_mode((display_width, display_height))
 icon = pygame.display.set_icon(pygame.image.load('images/icon.png'))
 pygame.display.set_caption("COVIDcatch")
@@ -60,8 +64,8 @@ playerparms = []
 # dog1parms = [openhandsPng, 5, 377, 450, 36, 30, 1.1]
 # dog2parms = [facePng,3.5,380,510,30,25, 1.02]
 
-handsparms = [openhandsPng, 5, 512, 512, 36, 30, 1.01] #increase to 1.1 last number to speed up virus faster
-faceparms = [facePng,5,512,512,30,50, 1.01]
+handsparms = [openhandsPng, 5, 712, 712, 36, 30, 1.01] #increase to 1.1 last number to speed up virus faster
+faceparms = [facePng,5,712,712,30,50, 1.01]
 # p_img,speedIn,player_x,player_y,hitbox_x,hitbox_y,speedmultiplier
 
 #ButtonClass
@@ -103,7 +107,7 @@ class Background:
         self.bg_y = bg_y
         gameDisplay.blit(bg_img, (bg_x, bg_y))
         
-        distanceBoard = Gameobject(distanceBoardImg, 0, 0, 525, 0, 0)
+        distanceBoard = Gameobject(distanceBoardImg, 0, 0, 725, 0, 0)
         gameDisplay.blit(distanceBoard.b_image, (distanceBoard.coord_x, distanceBoard.coord_y))
 
 # PlayerClass
@@ -175,9 +179,9 @@ def mainmenu():
 
         gameDisplay.fill(white)
 
-        titletext = gameDisplay.blit(titleImg, (275,200))
-        startButton = Button(startImg,280,260,60,20,clickStartImg,273,258,selectScreen)
-        quitButton = Button(quitImg,475,260,60,20,clickQuitImg,470,258,quitgame)
+        titletext = gameDisplay.blit(titleImg, (375,200))
+        startButton = Button(startImg,380,260,60,20,clickStartImg,373,258,selectScreen)
+        quitButton = Button(quitImg,575,260,60,20,clickQuitImg,570,258,quitgame)
 
         # Prints out all "high" scores to main menu
         TextSurf = pygame.font.Font("freesansbold.ttf", 30).render("High scores:", True, black)
@@ -205,12 +209,12 @@ def selectScreen():
                 quit()
 
         gameDisplay.fill(white)
-        gameDisplay.blit(selectText,(200,150))
+        gameDisplay.blit(selectText,(350,150))
 
         # dogSelect = Button2(dogImg, 280,260,40,150,clickedDogImg,278,226,dog1parms,game_loop)
         # dog2select = Button2(dog2Img,480,260,40,100, clickedDog2Img,479,239,dog2parms,game_loop)
-        openhandsSelect = Button2(openhandsPng, 280, 260, 200, 200, openhandsPng, 278, 226, handsparms, game_loop)
-        faceSelect = Button2(facePng, 480, 260, 200, 200, facePng, 479, 239, faceparms, game_loop)
+        openhandsSelect = Button2(openhandsPng, 380, 360, 200, 200, openhandsPng, 378, 326, handsparms, game_loop)
+        faceSelect = Button2(facePng, 589, 360, 200, 200, facePng, 579, 339, faceparms, game_loop)
 
         pygame.display.update()
         clock.tick(15)
@@ -220,8 +224,8 @@ def game_loop():
 #CreatingObjects
 # b_image, speed, coord_x, coord_y, hitbox_x, hitbox_y
 
-    wall1 = Gameobject(wall1Img, 3, 710, 50, 0, 0)
-    wall2 = Gameobject(wall2Img, 3, -20, 50, 0, 0)
+    wall1 = Gameobject(wall1Img, 3, 910, 250, 0, 0)
+    wall2 = Gameobject(wall2Img, 3, -20, 250, 0, 0)
     player = Player(playerparms[0],playerparms[1],playerparms[2],playerparms[3],playerparms[4],playerparms[5],playerparms[6])
 
     gloves = Gameobject(glovesImg, 5, random.randrange(0 + player.range, display_width - 20 - player.range),-600,40,35)
@@ -241,7 +245,11 @@ def game_loop():
     while not gameexit:
 
 #Background
-        if covidCounter > 4:
+        if covidCounter > 6:
+            # pygame.mixer.music.load('coughing.mp3')
+            # pygame.mixer.music.play(-1)
+            time.sleep(3)
+            # pygame.mixer.music.stop()
             crash("Oh no! You caught COVID-19!", score)
         
         gameDisplay.fill(white)
@@ -327,13 +335,16 @@ def game_loop():
                     covidCounter += 1
 
                     # Display bad catch alert text
-                    if covidCounter <= 4:
+                    if covidCounter <= 6:
+
                         TextSurf, TextRect = text_objects("Eeeek you caught a virus!", pygame.font.Font("freesansbold.ttf", 30))
                         TextRect.center = ((display_width / 2), (display_height / 2))
                         gameDisplay.blit(TextSurf, TextRect)
 
                         pygame.display.flip()
-                        time.sleep(1)
+                        # while pygame.mixer.music.get_busy():
+                        #     time.sleep(0.1)
+                        time.sleep(3)
 
                     player.player_x = 350 # Reset hand position to mid
     # Virus Distance - BAD
@@ -348,13 +359,21 @@ def game_loop():
                 covidCounter += 1
 
                 # Display bad catch alert text
-                if covidCounter <= 4:
+                if covidCounter <= 6:
+
+
                     TextSurf, TextRect = text_objects("Eeeek you caught a virus!", pygame.font.Font("freesansbold.ttf", 30))
                     TextRect.center = ((display_width / 2), (display_height / 2))
                     gameDisplay.blit(TextSurf, TextRect)
 
+
                     pygame.display.flip()
-                    time.sleep(1)
+                    nr = 0
+                    # while pygame.mixer.music.get_busy():
+                    #     nr += 1
+                    #     if nr > 3:
+                    #         break
+                    time.sleep(3)
 
                 player.player_x = 350 # Reset hand position to mid
 
