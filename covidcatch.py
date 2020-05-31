@@ -153,7 +153,7 @@ def message_display(text):
     TextRect.center = ((display_width / 2), (display_height / 2))
     gameDisplay.blit(TextSurf, TextRect)
     pygame.display.update()
-    time.sleep(2)
+    time.sleep(3)
     # game_loop() # NEED TO CHANGE THIS IF WE DON'T WANT IT TO RESTART EACH TIME
     runGame()
 
@@ -212,7 +212,10 @@ def selectScreen():
 
         gameDisplay.fill(white)
         gameDisplay.blit(selectText,(330,150))
-        gameDisplay.blit(instructionsImg, (255, 400))
+        gameDisplay.blit(instructionsImg, (260, 400))
+        font = pygame.font.SysFont(None, 30)
+        text = font.render("WARNING: As your score increases, the virus will accelerate!", True, red)
+        gameDisplay.blit(text, (225, 25))
 
         # dogSelect = Button2(dogImg, 280,260,40,150,clickedDogImg,278,226,dog1parms,game_loop)
         # dog2select = Button2(dog2Img,480,260,40,100, clickedDog2Img,479,239,dog2parms,game_loop)
@@ -253,7 +256,7 @@ def game_loop():
             # pygame.mixer.music.play(-1)
             # time.sleep(3)
             # pygame.mixer.music.stop()
-            crash("Oh no! You caught COVID-19!", score)
+            crash("Oh no you caught COVID-19!", score)
         
         gameDisplay.fill(white)
         bg = Background(bgImg, 0, 0)
