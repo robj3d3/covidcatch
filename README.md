@@ -1,6 +1,6 @@
 # COVIDcatch
 
-A catching isolation-inspired videogame made in Python using the Pygame libraries as part of the [OxfordHack](https://oxfordhack.co.uk/) Digithon 2020.
+A catching isolation-inspired videogame made in Python using the Pygame libraries as part of the [OxfordHack](https://oxfordhack.co.uk/) Digithon 2020. Click [here](https://devpost.com/software/covidcatch) for the Devpost!
 
 ## Gameplay Rules
 
