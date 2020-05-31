@@ -44,7 +44,7 @@ virusImg = pygame.transform.scale(virusImg, (45, 45))
 virusDistanceImg = pygame.image.load("images/virusDistance.png")
 virusDistanceImg = pygame.transform.scale(virusDistanceImg, (40, 40))
 
-pygame.mixer.music.load('coughing.mp3')
+# pygame.mixer.music.load('coughing.mp3')
 
 #SettingFrame
 display_width = 1000
@@ -248,7 +248,7 @@ def game_loop():
         if covidCounter > 6:
             # pygame.mixer.music.load('coughing.mp3')
             # pygame.mixer.music.play(-1)
-            time.sleep(3)
+            # time.sleep(3)
             # pygame.mixer.music.stop()
             crash("Oh no! You caught COVID-19!", score)
         
