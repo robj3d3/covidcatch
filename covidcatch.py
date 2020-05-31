@@ -14,12 +14,15 @@ grey = (180, 180, 180)
 
 #LoadingImages
 bgImg = pygame.image.load("images/bgCovid.png")
+bgImg = pygame.transform.scale(bgImg, (1000, 800))
 selectText = pygame.image.load("images/choose-your-player.png")
 startImg = pygame.image.load("images/starticon.png")
 quitImg = pygame.image.load("images/quiticon.png")
 titleImg = pygame.image.load("images/titleicon.png")
 clickStartImg = pygame.image.load("images/clickedStartIcon.png")
 clickQuitImg = pygame.image.load("images/clickedQuitIcon.png")
+instructionsImg = pygame.image.load("images/instructions.png")
+instructionsImg = pygame.transform.scale(instructionsImg, (540, 360))
 
 openhandsPng = pygame.image.load("images/openhands.png")
 openhandsPng = pygame.transform.scale(openhandsPng, (100, 100))
@@ -36,7 +39,6 @@ distanceBoardImg = pygame.image.load("images/distanceBoard.png")
 distanceBoardImg = pygame.transform.scale(distanceBoardImg, (1000, 100))
 wall1Img = pygame.image.load("images/wall1.png")
 wall2Img = pygame.image.load("images/wall2.png")
-bgImg = pygame.transform.scale(bgImg, (1000, 800))
 
 
 virusImg = pygame.image.load("images/icon.png")
@@ -179,7 +181,7 @@ def mainmenu():
 
         gameDisplay.fill(white)
 
-        titletext = gameDisplay.blit(titleImg, (375,200))
+        titletext = gameDisplay.blit(titleImg, (385,200))
         startButton = Button(startImg,380,260,60,20,clickStartImg,373,258,selectScreen)
         quitButton = Button(quitImg,575,260,60,20,clickQuitImg,570,258,quitgame)
 
@@ -209,12 +211,13 @@ def selectScreen():
                 quit()
 
         gameDisplay.fill(white)
-        gameDisplay.blit(selectText,(350,150))
+        gameDisplay.blit(selectText,(330,150))
+        gameDisplay.blit(instructionsImg, (255, 400))
 
         # dogSelect = Button2(dogImg, 280,260,40,150,clickedDogImg,278,226,dog1parms,game_loop)
         # dog2select = Button2(dog2Img,480,260,40,100, clickedDog2Img,479,239,dog2parms,game_loop)
-        openhandsSelect = Button2(openhandsPng, 380, 360, 200, 200, openhandsPng, 378, 326, handsparms, game_loop)
-        faceSelect = Button2(facePng, 589, 360, 200, 200, facePng, 579, 339, faceparms, game_loop)
+        openhandsSelect = Button2(openhandsPng, 380, 260, 200, 200, openhandsPng, 378, 226, handsparms, game_loop)
+        faceSelect = Button2(facePng, 589, 260, 200, 200, facePng, 579, 239, faceparms, game_loop)
 
         pygame.display.update()
         clock.tick(15)
