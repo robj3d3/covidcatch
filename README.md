@@ -24,7 +24,7 @@ Install Pygame libraries:
 
 `python -m pip install -U pygame --user`
 
-Ensure you're in the project directory:
+Ensure you're in the path of the project directory, then run:
 
 `python ./covidcatch.py`
 
